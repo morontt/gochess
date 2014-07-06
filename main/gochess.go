@@ -8,6 +8,8 @@ import (
 func main() {
     f := engine.InitPosition()
 
-    fmt.Println(f)
+    fmt.Println()
+    showBoard(f)
+    fmt.Println()
 }
 
