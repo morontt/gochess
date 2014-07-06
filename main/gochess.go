@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-    f := engine.GoTest()
+    f := engine.InitPosition()
 
     fmt.Println(f)
 }
