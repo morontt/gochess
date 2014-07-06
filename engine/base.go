@@ -13,10 +13,10 @@ const (
 )
 
 type Chessman struct {
-    name  byte
-    color int8
+    Name  byte
+    Color int8
     X, Y  byte
-    dead  bool
+    Dead  bool
 }
 
 type Position struct {
