@@ -21,29 +21,8 @@ func showBoard(p engine.Position) {
             for j = 0; j < 8; j++ {
                 fig = "   "
                 for k := 0; k < 32; k++ {
-                    if p.Figures[k].X == j && p.Figures[k].Y == 7 - i {
-                        switch p.Figures[k].Name {
-                            case engine.PAWN:
-                                fig = " P"
-                            case engine.BISHOP:
-                                fig = " B"
-                            case engine.KNIGHT:
-                                fig = " K"
-                            case engine.ROOK:
-                                fig = " R"
-                            case engine.QUEEN:
-                                fig = " Q"
-                            case engine.KING:
-                                fig = " X"
-                            default:
-                                fig = " *"
-                        }
-
-                        if p.Figures[k].Color == engine.WHITE {
-                            fig += "w"
-                        } else {
-                            fig += "b"
-                        }
+                    if !p.Figures[k].Dead && p.Figures[k].X == j && p.Figures[k].Y == 7 - i {
+                        fig = figureString(p.Figures[k])
                     }
                 }
                 fmt.Printf("%s|", fig)
