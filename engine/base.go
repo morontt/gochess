@@ -33,7 +33,7 @@ func InitPosition() Position {
 
     for i := 0; i < 2; i++ {
         delta := 8 * i
-        
+
         if i == 0 {
             color = WHITE
             hf = 0
@@ -45,7 +45,7 @@ func InitPosition() Position {
             hp = 6
             deltaP = 24
         }
-        
+
         res.Figures[0 + delta] = Chessman{ROOK, color, 0, hf, false}
         res.Figures[1 + delta] = Chessman{KNIGHT, color, 1, hf, false}
         res.Figures[2 + delta] = Chessman{BISHOP, color, 2, hf, false}
@@ -59,7 +59,7 @@ func InitPosition() Position {
             res.Figures[deltaP + k] = Chessman{PAWN, color, byte(k), hp, false}
         }
     }
-    
+
     return res
 }
 
