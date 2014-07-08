@@ -11,6 +11,8 @@ func showBoard(p engine.Position) {
         fig  string
     )
 
+    fmt.Println(" GoChess 0.0.9\n")
+
     str0 := "   +---+---+---+---+---+---+---+---+"
     str1 := "     A   B   C   D   E   F   G   H"
 
