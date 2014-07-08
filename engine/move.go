@@ -55,6 +55,12 @@ func Move(p *Position, a1, a2 string) bool {
         if (search && isLegalMove(p, kick, idx1, idx2)) {
             p.Figures[idx1].X = field2.X
             p.Figures[idx1].Y = field2.Y
+
+            if kick {
+                p.Figures[idx2].Dead = true
+            }
+        } else {
+            search = false
         }
     }
 
@@ -78,6 +84,10 @@ func ParseField(s string) (Field, bool) {
 }
 
 func isLegalMove(p *Position, kick bool, idx1, idx2 int) bool {
+    if kick && p.Figures[idx1].Color == p.Figures[idx2].Color {
+        return false
+    }
+
     return true
 }
 
