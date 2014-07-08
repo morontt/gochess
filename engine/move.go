@@ -6,10 +6,10 @@ import (
 )
 
 type Field struct {
-    X, Y byte
+    X, Y int8
 }
 
-var StringToCoord = map[string]byte{
+var StringToCoord = map[string]int8{
     "a": 0,
     "b": 1,
     "c": 2,

@@ -7,7 +7,7 @@ import (
 
 func showBoard(p engine.Position) {
     var (
-        i, j byte
+        i, j int8
         fig  string
     )
 

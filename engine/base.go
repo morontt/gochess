@@ -15,7 +15,7 @@ const (
 type Chessman struct {
     Name  byte
     Color int8
-    X, Y  byte
+    X, Y  int8
     Dead  bool
 }
 
@@ -27,7 +27,7 @@ func InitPosition() Position {
     var (
         res    Position
         color  int8
-        hf, hp byte
+        hf, hp int8
         deltaP int
     )
 
@@ -56,7 +56,7 @@ func InitPosition() Position {
         res.Figures[7 + delta] = Chessman{ROOK, color, 7, hf, false}
 
         for k := 0; k < 8; k++ {
-            res.Figures[deltaP + k] = Chessman{PAWN, color, byte(k), hp, false}
+            res.Figures[deltaP + k] = Chessman{PAWN, color, int8(k), hp, false}
         }
     }
 
