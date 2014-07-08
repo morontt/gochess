@@ -29,24 +29,36 @@ var StringToCoord = map[string]byte{
 }
 
 func Move(p *Position, a1, a2 string) bool {
+    var (
+        idx1, idx2 int
+    )
+
     field1, success1 := ParseField(a1)
     field2, success2 := ParseField(a2)
 
-    result := false
+    search := false
+    kick := false
 
     if (success1 && success2) {
         for i := 0; i < 32; i++ {
             if !p.Figures[i].Dead && p.Figures[i].X == field1.X && p.Figures[i].Y == field1.Y {
-                p.Figures[i].X = field2.X
-                p.Figures[i].Y = field2.Y
-                result = true
-
-                break
+                idx1 = i
+                search = true
             }
+
+            if !p.Figures[i].Dead && p.Figures[i].X == field2.X && p.Figures[i].Y == field2.Y {
+                idx2 = i
+                kick = true
+            }
+        }
+
+        if (search && isLegalMove(p, kick, idx1, idx2)) {
+            p.Figures[idx1].X = field2.X
+            p.Figures[idx1].Y = field2.Y
         }
     }
 
-    return result
+    return search
 }
 
 func ParseField(s string) (Field, bool) {
@@ -63,5 +75,9 @@ func ParseField(s string) (Field, bool) {
     }
 
     return result, success
+}
+
+func isLegalMove(p *Position, kick bool, idx1, idx2 int) bool {
+    return true
 }
 
