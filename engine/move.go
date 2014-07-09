@@ -9,6 +9,15 @@ type Field struct {
     X, Y int8
 }
 
+type Vector struct {
+    X, Y int8
+}
+
+func (v *Vector) Create(f1, f2 Field) {
+    v.X = f2.X - f1.X
+    v.Y = f2.Y - f1.Y
+}
+
 var StringToCoord = map[string]int8{
     "a": 0,
     "b": 1,
@@ -31,6 +40,7 @@ var StringToCoord = map[string]int8{
 func Move(p *Position, blackMove bool, a1, a2 string) bool {
     var (
         idx1, idx2 int
+        vect       Vector
     )
 
     field1, success1 := ParseField(a1)
@@ -40,6 +50,7 @@ func Move(p *Position, blackMove bool, a1, a2 string) bool {
     kick := false
 
     if (success1 && success2) {
+        vect.Create(field1, field2)
         for i := 0; i < 32; i++ {
             if !p.Figures[i].Dead && p.Figures[i].X == field1.X && p.Figures[i].Y == field1.Y {
                 idx1 = i
@@ -56,7 +67,7 @@ func Move(p *Position, blackMove bool, a1, a2 string) bool {
             search = false
         }
 
-        if (search && isLegalMove(p, kick, idx1, idx2)) {
+        if (search && isLegalMove(p, kick, idx1, idx2, vect)) {
             p.Figures[idx1].X = field2.X
             p.Figures[idx1].Y = field2.Y
 
@@ -87,8 +98,45 @@ func ParseField(s string) (Field, bool) {
     return result, success
 }
 
-func isLegalMove(p *Position, kick bool, idx1, idx2 int) bool {
+func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
+    var (
+        pureVector bool = false
+    )
+
     if kick && p.Figures[idx1].Color == p.Figures[idx2].Color {
+        return false
+    }
+
+    switch p.Figures[idx1].Name {
+        case KNIGHT:
+            if (vect.X == 1 || vect.X == -1) && (vect.Y == 2 || vect.Y == -2) {
+                pureVector = true
+            }
+            if (vect.X == 2 || vect.X == -2) && (vect.Y == 1 || vect.Y == -1) {
+                pureVector = true
+            }
+        case BISHOP:
+            if vect.X == vect.Y || vect.X == -vect.Y {
+                pureVector = true
+            }
+        case ROOK:
+            if vect.X == 0 || vect.Y == 0 {
+                pureVector = true
+            }
+        case QUEEN:
+            if vect.X == vect.Y || vect.X == -vect.Y {
+                pureVector = true
+            }
+            if vect.X == 0 || vect.Y == 0 {
+                pureVector = true
+            }
+        case KING:
+            if (vect.X == 1 || vect.X == -1 || vect.X == 0) && (vect.Y == 1 || vect.Y == -1 || vect.Y == 0) {
+                pureVector = true
+            }
+    }
+
+    if !pureVector {
         return false
     }
 
