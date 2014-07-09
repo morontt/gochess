@@ -28,7 +28,7 @@ var StringToCoord = map[string]int8{
     "8": 7,
 }
 
-func Move(p *Position, a1, a2 string) bool {
+func Move(p *Position, blackMove bool, a1, a2 string) bool {
     var (
         idx1, idx2 int
     )
@@ -50,6 +50,10 @@ func Move(p *Position, a1, a2 string) bool {
                 idx2 = i
                 kick = true
             }
+        }
+
+        if search && (blackMove && p.Figures[idx1].Color == WHITE || !blackMove && p.Figures[idx1].Color == BLACK) {
+            search = false
         }
 
         if (search && isLegalMove(p, kick, idx1, idx2)) {

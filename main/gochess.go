@@ -2,13 +2,25 @@ package main
 
 import (
     "fmt"
+    "flag"
     "gochess/engine"
 )
 
+var (
+    computerFirst, blackMove bool
+)
+
+func init() {
+    flag.BoolVar(&computerFirst, "comp", false, "first turn the computer")
+    flag.BoolVar(&blackMove, "black", false, "black's move")
+}
+
 func main() {
     var (
-        move1, move2 string
+        move1, move2, cursor string
     )
+
+    flag.Parse()
 
     pos := engine.InitPosition()
 
@@ -17,7 +29,13 @@ func main() {
 
     gameOver := false
     for !gameOver {
-        fmt.Print("> ")
+        if blackMove {
+            cursor = "BLACK"
+        } else {
+            cursor = "WHITE"
+        }
+
+        fmt.Print(cursor + " > ")
         _, err := fmt.Scanln(&move1, &move2)
 
         if move1 == "exit" || move1 == "quit" {
@@ -27,9 +45,10 @@ func main() {
         if err != nil {
             fmt.Println("error")
         } else {
-            if engine.Move(&pos, move1, move2) {
+            if engine.Move(&pos, blackMove, move1, move2) {
                 showBoard(pos)
                 fmt.Println()
+                blackMove = !blackMove
             } else {
                 fmt.Println("error")
             }
