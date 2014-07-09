@@ -109,14 +109,14 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
 
     switch p.Figures[idx1].Name {
         case KNIGHT:
-            if (vect.X == 1 || vect.X == -1) && (vect.Y == 2 || vect.Y == -2) {
+            if abs(vect.X) == 1 && abs(vect.Y) == 2 {
                 pureVector = true
             }
-            if (vect.X == 2 || vect.X == -2) && (vect.Y == 1 || vect.Y == -1) {
+            if abs(vect.X) == 2 && abs(vect.Y) == 1 {
                 pureVector = true
             }
         case BISHOP:
-            if vect.X == vect.Y || vect.X == -vect.Y {
+            if abs(vect.X) == abs(vect.Y) {
                 pureVector = true
             }
         case ROOK:
@@ -124,14 +124,14 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
                 pureVector = true
             }
         case QUEEN:
-            if vect.X == vect.Y || vect.X == -vect.Y {
+            if abs(vect.X) == abs(vect.Y) {
                 pureVector = true
             }
             if vect.X == 0 || vect.Y == 0 {
                 pureVector = true
             }
         case KING:
-            if (vect.X == 1 || vect.X == -1 || vect.X == 0) && (vect.Y == 1 || vect.Y == -1 || vect.Y == 0) {
+            if (abs(vect.X) == 1 || vect.X == 0) && (abs(vect.Y) == 1 || vect.Y == 0) {
                 pureVector = true
             }
     }
@@ -141,5 +141,16 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
     }
 
     return true
+}
+
+func abs(x int8) int8 {
+    switch {
+        case x < 0:
+            return -x
+        case x == 0:
+            return 0
+    }
+
+    return x
 }
 
