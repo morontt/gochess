@@ -18,6 +18,10 @@ func (v *Vector) Create(f1, f2 Field) {
     v.Y = f2.Y - f1.Y
 }
 
+func (v *Vector) LenSqr() int8 {
+    return v.X * v.X + v.Y * v.Y
+}
+
 var StringToCoord = map[string]int8{
     "a": 0,
     "b": 1,
@@ -101,7 +105,10 @@ func ParseField(s string) (Field, bool) {
 func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
     var (
         pureVector    bool = false
+        block         bool = false
         deltaY, pawnY int8
+        signX, signY  int8
+        i, m          int8
     )
 
     if kick && p.Figures[idx1].Color == p.Figures[idx2].Color {
@@ -153,7 +160,41 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
         return false
     }
 
-    return true
+    if p.Figures[idx1].Name != KNIGHT && vect.LenSqr() > 2 {
+        if vect.X == 0 {
+            signX = 0
+            signY = abs(vect.Y) / vect.Y
+            m = abs(vect.Y)
+        } else if vect.Y == 0 {
+            signX = abs(vect.X) / vect.X
+            signY = 0
+            m = abs(vect.X)
+        } else {
+            signX = abs(vect.X) / vect.X
+            signY = abs(vect.Y) / vect.Y
+            m = abs(vect.X)
+        }
+
+        probes := []Vector{}
+
+        for i = 1; i < m; i++ {
+            probes = append(probes, Vector{i * signX, i * signY})
+        }
+
+        for _, probe := range probes {
+            tx := p.Figures[idx1].X + probe.X
+            ty := p.Figures[idx1].Y + probe.Y
+
+            for j := 0; j < 32; j++ {
+                if !p.Figures[j].Dead && p.Figures[j].X == tx && p.Figures[j].Y == ty {
+                    block = true
+                    break
+                }
+            }
+        }
+    }
+
+    return !block
 }
 
 func abs(x int8) int8 {
