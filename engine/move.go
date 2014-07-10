@@ -100,7 +100,8 @@ func ParseField(s string) (Field, bool) {
 
 func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
     var (
-        pureVector bool = false
+        pureVector    bool = false
+        deltaY, pawnY int8
     )
 
     if kick && p.Figures[idx1].Color == p.Figures[idx2].Color {
@@ -109,10 +110,7 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
 
     switch p.Figures[idx1].Name {
         case KNIGHT:
-            if abs(vect.X) == 1 && abs(vect.Y) == 2 {
-                pureVector = true
-            }
-            if abs(vect.X) == 2 && abs(vect.Y) == 1 {
+            if (abs(vect.X) == 1 && abs(vect.Y) == 2) || (abs(vect.X) == 2 && abs(vect.Y) == 1) {
                 pureVector = true
             }
         case BISHOP:
@@ -124,15 +122,30 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
                 pureVector = true
             }
         case QUEEN:
-            if abs(vect.X) == abs(vect.Y) {
-                pureVector = true
-            }
-            if vect.X == 0 || vect.Y == 0 {
+            if vect.X == 0 || vect.Y == 0 || abs(vect.X) == abs(vect.Y) {
                 pureVector = true
             }
         case KING:
             if (abs(vect.X) == 1 || vect.X == 0) && (abs(vect.Y) == 1 || vect.Y == 0) {
                 pureVector = true
+            }
+        case PAWN:
+            if p.Figures[idx1].Color == WHITE {
+                deltaY = 1
+                pawnY = 1
+            } else {
+                deltaY = -1
+                pawnY = 6
+            }
+
+            if kick {
+                if abs(vect.X) == 1 && (vect.Y == deltaY || (p.Figures[idx1].Y == pawnY && vect.Y == 2 * deltaY)) {
+                    pureVector = true
+                }
+            } else {
+                if vect.X == 0 && (vect.Y == deltaY || (p.Figures[idx1].Y == pawnY && vect.Y == 2 * deltaY)) {
+                    pureVector = true
+                }
             }
     }
 
