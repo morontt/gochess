@@ -103,17 +103,27 @@ func ParseField(s string) (Field, bool) {
 }
 
 func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
-    var (
-        pureVector    bool = false
-        block         bool = false
-        deltaY, pawnY int8
-        signX, signY  int8
-        i, m          int8
-    )
-
     if kick && p.Figures[idx1].Color == p.Figures[idx2].Color {
         return false
     }
+
+    pureVector, _ := isPureVector(p, kick, idx1, vect)
+
+    if !pureVector {
+        return false
+    }
+
+    block := isBlockedMove(p, kick, idx1, vect)
+
+    return !block
+}
+
+func isPureVector(p *Position, kick bool, idx1 int, vect Vector) (bool, bool) {
+    var (
+        pureVector    bool = false
+        castle        bool = false
+        deltaY, pawnY int8
+    )
 
     switch p.Figures[idx1].Name {
         case KNIGHT:
@@ -136,6 +146,10 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
             if (abs(vect.X) == 1 || vect.X == 0) && (abs(vect.Y) == 1 || vect.Y == 0) {
                 pureVector = true
             }
+            if !p.Figures[idx1].Moved && vect.Y == 0 && abs(vect.X) == 2 {
+                pureVector = true
+                castle = true
+            }
         case PAWN:
             if p.Figures[idx1].Color == WHITE {
                 deltaY = 1
@@ -156,9 +170,15 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
             }
     }
 
-    if !pureVector {
-        return false
-    }
+    return pureVector, castle
+}
+
+func isBlockedMove(p *Position, kick bool, idx1 int, vect Vector) bool {
+    var (
+        block        bool = false
+        signX, signY int8
+        i, m         int8
+    )
 
     if p.Figures[idx1].Name != KNIGHT && vect.LenSqr() > 2 {
         if vect.X == 0 {
@@ -194,7 +214,7 @@ func isLegalMove(p *Position, kick bool, idx1, idx2 int, vect Vector) bool {
         }
     }
 
-    return !block
+    return block
 }
 
 func abs(x int8) int8 {

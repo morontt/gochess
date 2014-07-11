@@ -17,6 +17,7 @@ type Chessman struct {
     Color int8
     X, Y  int8
     Dead  bool
+    Moved bool
 }
 
 type Position struct {
@@ -46,17 +47,17 @@ func InitPosition() Position {
             deltaP = 24
         }
 
-        res.Figures[0 + delta] = Chessman{ROOK, color, 0, hf, false}
-        res.Figures[1 + delta] = Chessman{KNIGHT, color, 1, hf, false}
-        res.Figures[2 + delta] = Chessman{BISHOP, color, 2, hf, false}
-        res.Figures[3 + delta] = Chessman{QUEEN, color, 3, hf, false}
-        res.Figures[4 + delta] = Chessman{KING, color, 4, hf, false}
-        res.Figures[5 + delta] = Chessman{BISHOP, color, 5, hf, false}
-        res.Figures[6 + delta] = Chessman{KNIGHT, color, 6, hf, false}
-        res.Figures[7 + delta] = Chessman{ROOK, color, 7, hf, false}
+        res.Figures[0 + delta] = Chessman{ROOK, color, 0, hf, false, false}
+        res.Figures[1 + delta] = Chessman{KNIGHT, color, 1, hf, false, false}
+        res.Figures[2 + delta] = Chessman{BISHOP, color, 2, hf, false, false}
+        res.Figures[3 + delta] = Chessman{QUEEN, color, 3, hf, false, false}
+        res.Figures[4 + delta] = Chessman{KING, color, 4, hf, false, false}
+        res.Figures[5 + delta] = Chessman{BISHOP, color, 5, hf, false, false}
+        res.Figures[6 + delta] = Chessman{KNIGHT, color, 6, hf, false, false}
+        res.Figures[7 + delta] = Chessman{ROOK, color, 7, hf, false, false}
 
         for k := 0; k < 8; k++ {
-            res.Figures[deltaP + k] = Chessman{PAWN, color, int8(k), hp, false}
+            res.Figures[deltaP + k] = Chessman{PAWN, color, int8(k), hp, false, false}
         }
     }
 
